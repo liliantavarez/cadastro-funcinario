@@ -65,19 +65,10 @@ void imprimir_lista(funcionario *listaFuncionarios)
     }
 }
 
-void quantidadeFuncionarios(funcionario *listaFuncionarios)
-{
-    int tamanho=0;
-    while (listaFuncionarios != NULL){
-        tamanho=tamanho+1;        
-        listaFuncionarios = listaFuncionarios->prox;
-    }
-    cout << "Quantidade de funcinarios cadastrados:"<< tamanho << endl;
-}
-int tamanho_da_lista ( funcionario *listaFuncionarios)
+int tamanho ( funcionario *listaFuncionarios)
 {
     int cont=0;
-    while (listaFuncionarios->prox != NULL)
+    while (listaFuncionarios != NULL)
     {
         cont++;
         listaFuncionarios = listaFuncionarios->prox;
@@ -85,8 +76,8 @@ int tamanho_da_lista ( funcionario *listaFuncionarios)
     return cont;
 }
 
-bool inserirPos (funcionario *& listaFuncionarios, int posicao, int matricula, int idade){
-    int tam = tamanho_da_lista(listaFuncionarios);
+bool inserirPos (funcionario * &listaFuncionarios, int posicao, int matricula, int idade){
+    int tam = tamanho(listaFuncionarios);
     if (posicao>tam+1){
         return false;
     }else{
@@ -161,7 +152,8 @@ int main()
             imprimir_lista(listaFunc);
             break;
         case 4: 
-            quantidadeFuncionarios(listaFunc);
+            cout << ("Quantidade de funcionarios cadastrados:");
+            cout << tamanho(listaFunc);
             break;
         case 5:
             cout << ("Posicao:");
