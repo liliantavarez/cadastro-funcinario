@@ -6,101 +6,112 @@ struct funcionario
 {
     int idade;
     int matricula;
-    funcionario *apont;
+    funcionario *prox;
 };
 
-void instanciar_lista(funcionario *&novoFunc)
+void instanciar_lista(funcionario *&listaFuncionarios)
 {
-    novoFunc = NULL;
+    listaFuncionarios = NULL;
 }
 
-void inserir_inicio(funcionario *&novoFunc, int matricula, int idade)
+void inserir_inicio(funcionario *&listaFuncionarios, int matricula, int idade)
 {
     funcionario *novo = new funcionario;
     novo->matricula = matricula;
     novo->idade = idade;
-    novo->apont = NULL;
+    novo->prox = NULL;
 
-    if (novoFunc == NULL)
+    if (listaFuncionarios == NULL)
     {
-        novoFunc = novo;
+        listaFuncionarios = novo;
     }
     else
     {
-        novo->apont = novoFunc;
-        novoFunc = novo;
+        novo->prox = listaFuncionarios;
+        listaFuncionarios = novo;
     }
 }
 
-void inserir_final(funcionario *&novoFunc, int matricula, int idade)
+void inserir_final(funcionario *&listaFuncionarios, int matricula, int idade)
 {
     funcionario *novo = new funcionario;
     novo->idade = idade;
     novo->matricula = matricula;
-    novo->apont = NULL;
+    novo->prox = NULL;
 
-    if (novoFunc == NULL)
-        novoFunc = novo;
+    if (listaFuncionarios == NULL)
+        listaFuncionarios = novo;
     else
     {
-        funcionario *novoPont = novoFunc;
+        funcionario *novoPont = listaFuncionarios;
 
-        while (novoPont->apont != NULL)
+        while (novoPont->prox != NULL)
         {
-            novoPont = novoPont->apont;
+            novoPont = novoPont->prox;
         }
-        novoPont->apont = novo;
+        novoPont->prox = novo;
     }
 }
 
-void imprimir_lista(funcionario *novoFunc)
+void imprimir_lista(funcionario *listaFuncionarios)
 {
-    while (novoFunc != NULL)
+    while (listaFuncionarios != NULL)
     {
-        cout << "Matricula:" << novoFunc->matricula << endl;
-        cout << "Idade:" << novoFunc->idade << endl;
+        cout << "Matricula:" << listaFuncionarios->matricula << endl;
+        cout << "Idade:" << listaFuncionarios->idade << endl;
         cout << ("") << endl;
 
-        novoFunc = novoFunc->apont;
+        listaFuncionarios = listaFuncionarios->prox;
     }
 }
 
-void tamanho(funcionario *novoFunc)
+void quantidadeFuncionarios(funcionario *listaFuncionarios)
 {
     int tamanho=0;
-    while (novoFunc != NULL){
+    while (listaFuncionarios != NULL){
         tamanho=tamanho+1;        
-        novoFunc = novoFunc->apont;
+        listaFuncionarios = listaFuncionarios->prox;
     }
     cout << "Quantidade de funcinarios cadastrados:"<< tamanho << endl;
 }
+int tamanho_da_lista ( funcionario *listaFuncionarios)
+{
+    int cont=0;
+    while (listaFuncionarios->prox != NULL)
+    {
+        cont++;
+        listaFuncionarios = listaFuncionarios->prox;
+    }
+    return cont;
+}
 
-void inserir_na_posicao(funcionario *&novoFunc, int posicao, int matricula, int idade){
-
-  
+bool inserirPos (funcionario *& listaFuncionarios, int posicao, int matricula, int idade){
+    int tam = tamanho_da_lista(listaFuncionarios);
+    if (posicao>tam+1){
+        return false;
+    }else{
         funcionario *novo = new funcionario;
         novo->idade = idade;
         novo->matricula = matricula;
-        novo->apont = NULL;
-        if (posicao == 1)
-        {
-            novo->apont = novoFunc;
-            novoFunc = novo;
-        }
-        else
-        {
-            funcionario *perc = novoFunc;
-            funcionario *aux;
-            int cont=0;
-            while (cont != posicao)
+        novo->prox = NULL;
+
+        if (posicao == 1){
+            inserir_inicio(listaFuncionarios,matricula,idade);
+        } else if (posicao == tam+1){
+            inserir_final(listaFuncionarios,matricula,idade);
+        }else{
+            funcionario * perc = listaFuncionarios;
+            int cont = 1;
+            while (cont != posicao-1)
             {
-                aux = perc;
-                perc = perc->apont;
+                perc = perc->prox;
                 cont++;
             }
-            novo->apont = perc;
-            aux->apont = novo;
+                novo->prox = perc->prox;
+                perc->prox=novo;
         }
+        return true;
+    }
 }
 
 int main()
@@ -150,7 +161,7 @@ int main()
             imprimir_lista(listaFunc);
             break;
         case 4: 
-            tamanho(listaFunc);
+            quantidadeFuncionarios(listaFunc);
             break;
         case 5:
             cout << ("Posicao:");
@@ -160,8 +171,8 @@ int main()
             cout << ("Idade:");
             cin >> (idade);
             system("cls");
-            cout << "Funcionario cadastrado na posica "<<posicao<<" da lista" << endl;
-            inserir_na_posicao(listaFunc,posicao,matricula,idade);
+            cout << "Funcionario cadastrado na posica: "<<posicao<<" da lista" << endl;
+            inserirPos(listaFunc,posicao,matricula,idade);
             break;
         case 6:
         cout << ("Fechando Sistema")<< endl;; 
