@@ -6,20 +6,21 @@ struct funcionario
 {
     int idade;
     int matricula;
-    funcionario *prox;
+    struct funcionario *prox, * ant;
 };
 
-void instanciar_lista(funcionario *&listaFuncionarios)
+void instanciarLista(funcionario * &listaFuncionarios)
 {
     listaFuncionarios = NULL;
 }
 
-void inserir_inicio(funcionario *&listaFuncionarios, int matricula, int idade)
+void inserirInicio(funcionario *&listaFuncionarios, int matricula, int idade)
 {
-    funcionario *novo = new funcionario;
+    funcionario * novo = new funcionario;
     novo->matricula = matricula;
     novo->idade = idade;
     novo->prox = NULL;
+    novo->ant = NULL;
 
     if (listaFuncionarios == NULL)
     {
@@ -28,32 +29,35 @@ void inserir_inicio(funcionario *&listaFuncionarios, int matricula, int idade)
     else
     {
         novo->prox = listaFuncionarios;
+        listaFuncionarios->ant = novo ;
         listaFuncionarios = novo;
     }
 }
 
-void inserir_final(funcionario *&listaFuncionarios, int matricula, int idade)
+void inserirFinal(funcionario *&listaFuncionarios, int matricula, int idade)
 {
     funcionario *novo = new funcionario;
     novo->idade = idade;
     novo->matricula = matricula;
     novo->prox = NULL;
+    novo->ant = NULL;
 
     if (listaFuncionarios == NULL)
         listaFuncionarios = novo;
     else
     {
-        funcionario *novoPont = listaFuncionarios;
+        funcionario *perc = listaFuncionarios;
 
-        while (novoPont->prox != NULL)
+        while (perc->prox != NULL)
         {
-            novoPont = novoPont->prox;
+            perc = perc->prox;
         }
-        novoPont->prox = novo;
+        perc->prox = novo;
+        novo->ant = perc;
     }
 }
 
-void imprimir_lista(funcionario *listaFuncionarios)
+void imprimirLista(funcionario *listaFuncionarios)
 {
     while (listaFuncionarios != NULL)
     {
@@ -85,11 +89,12 @@ bool inserirPos (funcionario * &listaFuncionarios, int posicao, int matricula, i
         novo->idade = idade;
         novo->matricula = matricula;
         novo->prox = NULL;
+        novo->ant = NULL;
 
         if (posicao == 1){
-            inserir_inicio(listaFuncionarios,matricula,idade);
+            inserirInicio(listaFuncionarios,matricula,idade);
         } else if (posicao == tam+1){
-            inserir_final(listaFuncionarios,matricula,idade);
+            inserirFinal(listaFuncionarios,matricula,idade);
         }else{
             funcionario * perc = listaFuncionarios;
             int cont = 1;
@@ -105,18 +110,19 @@ bool inserirPos (funcionario * &listaFuncionarios, int posicao, int matricula, i
     }
 }
 
-bool removerInicio (funcionario * &listaFuncionarios, int matricula, int idade){
+bool removerInicio (funcionario * &listaFuncionarios){
     if (listaFuncionarios == NULL){
         return false;
     }else{
         funcionario * aux = listaFuncionarios;
         listaFuncionarios = listaFuncionarios->prox;
+        listaFuncionarios->ant = listaFuncionarios; 
         delete aux;
         return true;
     }
 }
 
-bool removerFinal(funcionario *&listaFuncionarios, int matricula, int idade){
+bool removerFinal(funcionario *&listaFuncionarios){
     if (listaFuncionarios == NULL){
         return false;
     }
@@ -128,6 +134,7 @@ bool removerFinal(funcionario *&listaFuncionarios, int matricula, int idade){
             funcionario *aux = listaFuncionarios;
             while (aux->prox->prox != NULL){
                 aux = aux->prox;
+                aux->ant = aux;
             }
             delete aux->prox;
             aux->prox = NULL;
@@ -136,11 +143,23 @@ bool removerFinal(funcionario *&listaFuncionarios, int matricula, int idade){
     }
 }
 
+void matriculaPar (funcionario * listaFuncionarios){
 
+   while (listaFuncionarios!=NULL){
+   if (listaFuncionarios->matricula%2==0){
+        cout << "Matricula:" << listaFuncionarios->matricula << endl;
+        cout << "Idade:" << listaFuncionarios->idade << endl;
+        cout << ("") << endl;
+        listaFuncionarios = listaFuncionarios->prox;
+   }else{
+       listaFuncionarios = listaFuncionarios->prox;
+   }
+   }
+}
 
 int main(){
     funcionario * listaFunc;
-    instanciar_lista(listaFunc);
+    instanciarLista(listaFunc);
 
     int matricula,idade,posicao, opc,cont;
 
@@ -155,7 +174,7 @@ int main(){
         cout << ("6.Remover funcionário do início da lista") << endl;
         cout << ("7.Remover funcionário do final da lista") << endl;
         cout << ("8.Remover funcionário de uma determinada posição da lista") << endl;
-        cout << ("9.Imprimir funcionários com matrículas pares") << endl;
+        cout << ("9.Imprimir funcionarios com matriculas pares") << endl;
         cout << ("10.SAIR") << endl;
         cout << ("OPERACAO: ");
         cin >> (opc);
@@ -169,7 +188,7 @@ int main(){
             cin >> (matricula);
             cout << ("Idade:");
             cin >> (idade);
-            inserir_inicio(listaFunc,matricula,idade);
+            inserirInicio(listaFunc,matricula,idade);
             system("cls");
             cout << ("Funcionario cadastrado no INICIO da lista!")<< endl;
             break;
@@ -178,18 +197,17 @@ int main(){
             cin >> (matricula);
             cout << ("Idade:");
             cin >> (idade);
-            inserir_final(listaFunc,matricula,idade);
+            inserirFinal(listaFunc,matricula,idade);
             system("cls");
             cout << ("Funcionario cadastrado no FINAL da lista!")<< endl;
             break;
         case 3:
             cout << ("Funcionarios Cadastrados") << endl;
             cout << ("") << endl;
-            imprimir_lista(listaFunc);
+            imprimirLista(listaFunc);
             break;
         case 4: 
-            cout << ("Quantidade de funcionarios cadastrados:");
-            cout << tamanho(listaFunc);
+            cout << "Quantidade de funcionarios cadastrados:"<< tamanho(listaFunc);
             break;
         case 5:
             cout << ("Posicao:");
@@ -202,11 +220,28 @@ int main(){
             cout << "Funcionario cadastrado na posicao: "<<posicao<<" da lista" << endl;
             inserirPos(listaFunc,posicao,matricula,idade);
             break;
+        case 6:
+            removerInicio(listaFunc);
+            cout << "Funcionario do INICIO da lista removido com sucesso!" << endl;    
+            break;
+        case 7:
+            removerFinal(listaFunc);
+            cout << "Funcionario do FINAL da lista removido com sucesso!" << endl;    
+            break;
+        case 8: 
+            cout << "POSICAO:";
+            cin >> (posicao);
+            system("cls");
+            cout << "Funcionario da posicao:"<<posicao<<" removido da lista" << endl;
+        case 9: 
+            cout << "Funcionarios com matriculas pares" << endl;
+            matriculaPar(listaFunc);
+            break;
         case 10:
-        cout << ("Fechando Sistema")<< endl;; 
+        cout << "Fechando Sistema" << endl; 
         break;
         default:
-            cout << ("OPCAO INVALIDA")<< endl;;
+            cout << "OPCAO INVALIDA"<< endl;
             break;
         }
     } while (opc != 6);
