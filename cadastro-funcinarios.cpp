@@ -105,8 +105,40 @@ bool inserirPos (funcionario * &listaFuncionarios, int posicao, int matricula, i
     }
 }
 
-int main()
-{
+bool removerInicio (funcionario * &listaFuncionarios, int matricula, int idade){
+    if (listaFuncionarios == NULL){
+        return false;
+    }else{
+        funcionario * aux = listaFuncionarios;
+        listaFuncionarios = listaFuncionarios->prox;
+        delete aux;
+        return true;
+    }
+}
+
+bool removerFinal(funcionario *&listaFuncionarios, int matricula, int idade){
+    if (listaFuncionarios == NULL){
+        return false;
+    }
+    else{
+        if (listaFuncionarios->prox == NULL){
+            delete listaFuncionarios;
+        }
+        else{
+            funcionario *aux = listaFuncionarios;
+            while (aux->prox->prox != NULL){
+                aux = aux->prox;
+            }
+            delete aux->prox;
+            aux->prox = NULL;
+        }
+        return true;
+    }
+}
+
+
+
+int main(){
     funcionario * listaFunc;
     instanciar_lista(listaFunc);
 
@@ -115,12 +147,16 @@ int main()
     do{
         cout << ("") << endl;   
         cout << ("-------------MENU------------")<< endl;
-        cout << ("1.Inserir no inicio da lista.")<< endl;
-        cout << ("2.Inserir no final da lista.")<< endl;
+        cout << ("1.Inserir no inicio da lista")<< endl;
+        cout << ("2.Inserir no final da lista")<< endl;
         cout << ("3.Imprimir a lista de funcionarios")<< endl;
         cout << ("4.Exibir a quantidade de funcionarios")<< endl;
         cout << ("5.Adicionar funcionario em uma determinada posicao da lista")<< endl;
-        cout << ("6.SAIR") << endl;
+        cout << ("6.Remover funcionário do início da lista") << endl;
+        cout << ("7.Remover funcionário do final da lista") << endl;
+        cout << ("8.Remover funcionário de uma determinada posição da lista") << endl;
+        cout << ("9.Imprimir funcionários com matrículas pares") << endl;
+        cout << ("10.SAIR") << endl;
         cout << ("OPERACAO: ");
         cin >> (opc);
         cout << ("") << endl;       
@@ -163,10 +199,10 @@ int main()
             cout << ("Idade:");
             cin >> (idade);
             system("cls");
-            cout << "Funcionario cadastrado na posica: "<<posicao<<" da lista" << endl;
+            cout << "Funcionario cadastrado na posicao: "<<posicao<<" da lista" << endl;
             inserirPos(listaFunc,posicao,matricula,idade);
             break;
-        case 6:
+        case 10:
         cout << ("Fechando Sistema")<< endl;; 
         break;
         default:
