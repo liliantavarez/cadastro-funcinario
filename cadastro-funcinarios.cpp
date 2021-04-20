@@ -115,9 +115,12 @@ bool removerInicio (funcionario * &listaFuncionarios){
         return false;
     }else{
         funcionario * aux = listaFuncionarios;
-        listaFuncionarios = listaFuncionarios->prox;
-        listaFuncionarios->ant = listaFuncionarios; 
+        listaFuncionarios = aux->prox;
+        if (aux->prox!=NULL){
+        listaFuncionarios->prox->ant = NULL; 
+        }
         delete aux;
+        aux=NULL;
         return true;
     }
 }
@@ -138,6 +141,35 @@ bool removerFinal(funcionario *&listaFuncionarios){
             }
             delete aux->prox;
             aux->prox = NULL;
+        }
+        return true;
+    }
+}
+
+bool removerPos (funcionario * &listaFuncionaros, int posicao){
+    funcionario * aux = listaFuncionaros;
+    funcionario * anterior;
+    int cont=1;
+    while(cont != posicao && aux != NULL){
+      anterior = aux;
+      aux=aux->prox;
+      cont++;
+    }
+    if(aux == NULL){
+        return false;
+    }
+    else{
+        if(aux == listaFuncionaros){
+            listaFuncionaros=listaFuncionaros->prox;
+            delete aux;
+        }
+        else if(aux->prox == NULL){
+            delete aux;
+            anterior->prox = NULL;
+        }
+        else{
+            anterior->prox = aux->prox;
+            delete aux;
         }
         return true;
     }
@@ -171,9 +203,9 @@ int main(){
         cout << ("3.Imprimir a lista de funcionarios")<< endl;
         cout << ("4.Exibir a quantidade de funcionarios")<< endl;
         cout << ("5.Adicionar funcionario em uma determinada posicao da lista")<< endl;
-        cout << ("6.Remover funcionário do início da lista") << endl;
-        cout << ("7.Remover funcionário do final da lista") << endl;
-        cout << ("8.Remover funcionário de uma determinada posição da lista") << endl;
+        cout << ("6.Remover funcionario do inicio da lista") << endl;
+        cout << ("7.Remover funcionario do final da lista") << endl;
+        cout << ("8.Remover funcionario de uma determinada posicao da lista") << endl;
         cout << ("9.Imprimir funcionarios com matriculas pares") << endl;
         cout << ("10.SAIR") << endl;
         cout << ("OPERACAO: ");
@@ -203,7 +235,6 @@ int main(){
             break;
         case 3:
             cout << ("Funcionarios Cadastrados") << endl;
-            cout << ("") << endl;
             imprimirLista(listaFunc);
             break;
         case 4: 
@@ -222,7 +253,7 @@ int main(){
             break;
         case 6:
             removerInicio(listaFunc);
-            cout << "Funcionario do INICIO da lista removido com sucesso!" << endl;    
+            cout << "Funcionario do INICIO da lista removido com sucesso!" << endl;
             break;
         case 7:
             removerFinal(listaFunc);
@@ -231,6 +262,7 @@ int main(){
         case 8: 
             cout << "POSICAO:";
             cin >> (posicao);
+            removerPos(listaFunc,posicao);
             system("cls");
             cout << "Funcionario da posicao:"<<posicao<<" removido da lista" << endl;
         case 9: 
