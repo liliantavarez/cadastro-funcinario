@@ -117,7 +117,7 @@ bool removerInicio (funcionario * &listaFuncionarios){
         funcionario * aux = listaFuncionarios;
         listaFuncionarios = aux->prox;
         if (aux->prox!=NULL){
-        listaFuncionarios->prox->ant = NULL; 
+            aux->prox->ant = NULL; 
         }
         delete aux;
         aux=NULL;
@@ -235,6 +235,7 @@ int main(){
             break;
         case 3:
             cout << ("Funcionarios Cadastrados") << endl;
+            cout << ("") << endl;  
             imprimirLista(listaFunc);
             break;
         case 4: 
@@ -267,6 +268,7 @@ int main(){
             cout << "Funcionario da posicao:"<<posicao<<" removido da lista" << endl;
         case 9: 
             cout << "Funcionarios com matriculas pares" << endl;
+            cout << ("") << endl;  
             matriculaPar(listaFunc);
             break;
         case 10:
@@ -276,5 +278,5 @@ int main(){
             cout << "OPCAO INVALIDA"<< endl;
             break;
         }
-    } while (opc != 6);
+    } while (opc != 10);
 }
